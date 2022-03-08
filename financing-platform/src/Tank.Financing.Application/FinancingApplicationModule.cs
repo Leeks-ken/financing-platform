@@ -1,4 +1,4 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Volo.Abp.Account;
 using Volo.Abp.AuditLogging;
@@ -35,7 +35,8 @@ namespace Tank.Financing;
     typeof(CmsKitProApplicationModule),
     typeof(TextTemplateManagementApplicationModule)
     )]
-public class FinancingApplicationModule : AbpModule
+[DependsOn(typeof(AbpAccountSharedApplicationModule))]
+    public class FinancingApplicationModule : AbpModule
 {
     public override void ConfigureServices(ServiceConfigurationContext context)
     {
@@ -43,5 +44,7 @@ public class FinancingApplicationModule : AbpModule
         {
             options.AddMaps<FinancingApplicationModule>();
         });
+
+        Configure<SmsOptions>(context.Services.GetConfiguration().GetSection("Sms"));
     }
 }

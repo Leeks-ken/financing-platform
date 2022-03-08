@@ -1,20 +1,17 @@
 using System;
-using System.Linq;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using System.Linq.Dynamic.Core;
 using AElf.Contracts.Delegator;
 using AElf.EventHandler;
 using AElf.Types;
 using Google.Protobuf;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 using Tank.Contracts.Financing;
-using Volo.Abp;
 using Volo.Abp.Application.Dtos;
 using Volo.Abp.Application.Services;
-using Volo.Abp.Domain.Repositories;
 using Tank.Financing.Permissions;
-using Tank.Financing.Applies;
 
 namespace Tank.Financing.Applies
 {
@@ -22,6 +19,8 @@ namespace Tank.Financing.Applies
     [Authorize(FinancingPermissions.Applies.Default)]
     public class AppliesAppService : ApplicationService, IAppliesAppService
     {
+        public ILogger<AppliesAppService> Logger { get; set; }
+
         private readonly IApplyRepository _applyRepository;
 
         private readonly NodeManager _nodeManager = new(FinancingConsts.DefaultNodeUrl,
@@ -31,6 +30,7 @@ namespace Tank.Financing.Applies
         public AppliesAppService(IApplyRepository applyRepository)
         {
             _applyRepository = applyRepository;
+            Logger = NullLogger<AppliesAppService>.Instance;
         }
 
         public virtual async Task<PagedResultDto<ApplyDto>> GetListAsync(GetAppliesInput input)
@@ -83,7 +83,7 @@ namespace Tank.Financing.Applies
         
         private void AdvanceSetAllowance(ApplyCreateDto input)
         {
-            ForwardContract(input.EnterpriseName, FinancingConsts.ScopeIdForEnterprise, nameof(SetAllowance),
+            ForwardContract(input.Organization, FinancingConsts.ScopeIdForFinancingOrganization, nameof(SetAllowance),
                 new SetAllowanceInput
                 {
                     EnterpriseName = input.EnterpriseName,
@@ -187,6 +187,7 @@ namespace Tank.Financing.Applies
                     ScopeId = scopeId
                 });
             var result = _nodeManager.CheckTransactionResult(txId);
+            Logger.LogWarning($"{methodName} tx sent: {result.TransactionId}");
             if (result.Status != "MINED")
             {
                 throw new TransactionFailedException($"Transaction execution failed: {result.Error}");

@@ -60,6 +60,7 @@ using Volo.Saas.Host;
 using Volo.Saas.Host.Blazor;
 using Volo.Saas.Host.Blazor.Server;
 using Volo.CmsKit.Pro.Admin.Web;
+using Volo.Abp.Account.Pro.Public.Blazor;
 
 namespace Tank.Financing.Blazor;
 
@@ -86,7 +87,8 @@ namespace Tank.Financing.Blazor;
     typeof(CmsKitProAdminWebModule),
     typeof(TextTemplateManagementBlazorServerModule)
    )]
-public class FinancingBlazorModule : AbpModule
+[DependsOn(typeof(AbpAccountPublicBlazorModule))]
+    public class FinancingBlazorModule : AbpModule
 {
     public override void PreConfigureServices(ServiceConfigurationContext context)
     {
