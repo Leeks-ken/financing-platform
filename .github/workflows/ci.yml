@@ -13,13 +13,11 @@ jobs:
         uses: actions/setup-dotnet@v1
         with:
           dotnet-version: '6.0.x'
-     # - name: cd financing-platform
-     #   run: cd financing-platform
-      - name: ls -al
-        run: ls -al
-      - name: dotnet publish
-        run: cd financing-platform && dotnet publish -o abc
-      - name: ls abc
-        run: ls abc
+      - name: Build
+      - run: cd financing-platform
+      - run: ls -al
+      - run: mkdir abc
+      - run: dotnet publish -o abc
+      - run: ls abc
 
 
