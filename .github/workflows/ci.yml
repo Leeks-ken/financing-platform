@@ -25,6 +25,7 @@ jobs:
         with:
           dotnet-version: '6.0.x'
       - run: ls -al
+      - run: docker ps -a
       - run: mkdir -p financing-platform/abc
       #- run: cd financing-platform && dotnet publish -o abc
       - run: cd financing-platform && ls -al .
