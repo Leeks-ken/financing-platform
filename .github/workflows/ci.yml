@@ -6,7 +6,18 @@ on:
 
 jobs:
   build:
+    name: Build
     runs-on: ubuntu-latest
+    services:
+      mysql:
+        image: mysql:5.7
+        env:
+          MYSQL_ALLOW_EMPTY_PASSWORD: yes
+          MYSQL_DATABASE: laravel
+        ports:
+          - 3306:3306
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+      
     steps:
       - uses: actions/checkout@v2
       - name: Setup dotnet
@@ -15,7 +26,8 @@ jobs:
           dotnet-version: '6.0.x'
       - run: ls -al
       - run: mkdir -p financing-platform/abc
-      - run: cd financing-platform && dotnet publish -o abc
+      #- run: cd financing-platform && dotnet publish -o abc
+      - run: cd financing-platform && ls -al .
       - run: ls financing-platform/abc
 
 
