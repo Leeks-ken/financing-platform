@@ -13,7 +13,6 @@ jobs:
         uses: actions/setup-dotnet@v1
         with:
           dotnet-version: '6.0.x'
-      - name: Build
       - run: cd financing-platform
       - run: ls -al
       - run: mkdir abc
