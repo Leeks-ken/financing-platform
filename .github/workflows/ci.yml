@@ -13,10 +13,9 @@ jobs:
         uses: actions/setup-dotnet@v1
         with:
           dotnet-version: '6.0.x'
-      - run: cd financing-platform
       - run: ls -al
-      - run: mkdir abc
-      - run: dotnet publish -o abc
-      - run: ls abc
+      - run: mkdir -p financing-platform/abc
+      - run: cd financing-platform && dotnet publish -o abc
+      - run: ls financing-platform/abc
 
 
